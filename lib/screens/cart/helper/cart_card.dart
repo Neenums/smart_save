@@ -6,10 +6,12 @@ import '../../products/helper/rating.dart';
 class CartCard extends StatelessWidget {
   const CartCard({
     Key? key,
-    // required this.cart,
+    // required this
   }) : super(key: key);
 
-  // final Cart cart;
+ // final String name;
+ // final String image;
+ // final String rate;
 
   @override
   Widget build(BuildContext context) {
@@ -33,23 +35,23 @@ class CartCard extends StatelessWidget {
         Expanded(
           child: Stack(
             children: [
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     //
                     'Cart title',
-                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                    style: TextStyle(color: Colors.black, fontSize: 16),
                     maxLines: 2,
                   ),
-                  const SizedBox(height: 8),
-                  Rating(),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
+                  ProductRating(),
+                  SizedBox(height: 8),
                   Text.rich(
                     TextSpan(
                       // text: "\$${cart.product.price}",
                       text: "\$18.00",
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontWeight: FontWeight.w600, color: Colors.grey),
           
                     ),

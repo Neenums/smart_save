@@ -18,42 +18,44 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen>
     with TickerProviderStateMixin {
-  late final TabController tabController =
-      TabController(length: 3, vsync: this);
-  List menShoeData = [];
-  List womenShoeData = [];
-  List kidsShoeData = [];
-  List dinningTableData = [];
-@override
-  void initState() {
+  late TabController tabController;
 
+
+
+  @override
+  void initState() {
     super.initState();
-    final products=Provider.of<ProductProvider>(context,listen: false);
+    final products = Provider.of<ProductProvider>(context, listen: false);
     products.getProductData();
+    products.getCategories();
+    tabController = TabController(length:4?? products!.categories!.length??4, vsync: this);
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
+      child: Scaffold(backgroundColor: background,
           appBar: AppBar(
-            title: Text(
-              AppStrings.instance.appName,
-              style: appStyleHt(28, Colors.black, FontWeight.bold, 1.2),
+            leading: Icon(Icons.border_all_outlined,color: Colors.black,),
+            title: Center(
+              child: Text(
+                AppStrings.instance.appName,
+                style:appNameHead()
+              ),
             ),
-            actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
-            backgroundColor: Colors.white,
+            actions: [
+              IconButton(onPressed: () {}, icon: const Icon(Icons.search))
+            ],
+            backgroundColor: background,
           ),
-          drawer: Drawer(
-            surfaceTintColor: Colors.white,
-            backgroundColor: Colors.white,
-          ),
+
           body: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Stack(
               children: [
                 Container(
                   height: MediaQuery.of(context).size.height * 0.32,
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(8, 0, 0, 15),
                     child: SizedBox(
@@ -71,10 +73,10 @@ class _ProductScreenState extends State<ProductScreen>
                                         24, Colors.black, FontWeight.bold)),
                                 Row(
                                   children: [
-                                    Text('sort',
+                                    Text('sort by',
                                         style: appStyle(20, Colors.black54,
                                             FontWeight.w700)),
-                                    Icon(
+                                    const Icon(
                                       Icons.keyboard_arrow_down_outlined,
                                       color: Colors.black,
                                     )
@@ -83,37 +85,34 @@ class _ProductScreenState extends State<ProductScreen>
                               ],
                             ),
                           ),
-
                           Consumer<ProductProvider>(
-                            builder: (context,item,child) {
-                              return item.loading?CircularProgressIndicator():
-                              TabBar(
-                                  dividerColor: Colors.transparent,
-                                  tabAlignment: TabAlignment.start,
-                                  indicatorSize: TabBarIndicatorSize.tab,
-                                  controller: tabController,
-                                  isScrollable: true,
-                                  labelColor: Colors.white,
-                                  indicatorColor: Colors.transparent,
-                                  indicator: BoxDecoration(
-                                      color: primary,
-                                      borderRadius: BorderRadius.circular(8)),
-                                  unselectedLabelColor: Colors.grey.shade500,
-                                  labelStyle:
-                                      appStyle(22, Colors.black, FontWeight.w500),
-                                  tabs: const [
-                                    Tab(
-                                      text: 'Men Shoes',
-                                    ),
-                                    Tab(
-                                      text: 'Women Shoes',
-                                    ),
-                                    Tab(
-                                      text: 'Kids Shoes',
-                                    )
-                                  ]);
-                            }
-                          ),
+                              builder: (context, item, child) {
+                            return item.loading
+                                ? const CircularProgressIndicator()
+                                : DefaultTabController(
+                                  length: 4,
+                                  child: TabBar(
+                                  
+                                      dividerColor: Colors.transparent,
+                                      tabAlignment: TabAlignment.start,
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      controller: tabController,
+                                      isScrollable: true,
+                                      labelColor: Colors.white,
+                                      indicatorColor: Colors.transparent,
+                                      indicator: BoxDecoration(
+                                          color: primary,
+                                          borderRadius: BorderRadius.circular(8)),
+                                      unselectedLabelColor: Colors.grey.shade500,
+                                      labelStyle: appStyle(
+                                          22, Colors.black, FontWeight.w500),
+                                      tabs: item.categories
+                                          .map((e) => Tab(
+                                                text: e,
+                                              ))
+                                          .toList()),
+                                );
+                          }),
                         ],
                       ),
                     ),
@@ -123,150 +122,131 @@ class _ProductScreenState extends State<ProductScreen>
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.15),
                   child: Consumer<ProductProvider>(
-                    builder: (context,item,child) {
-                      return TabBarView(controller: tabController, children: [
-                        Column(
-                          children: [
-                            Expanded(
-                              child: GridView.builder(
-                                itemBuilder: (cxt, int index) {
-                                 var  products=item.productData[index];
-                                  menShoeData = productData
-                                      .where(
-                                          (element) => element.pCategory == 'Sofa')
-                                      .toList();
-                                  return ItemCard(product: item.productData[index], press:()=> Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProductDetailScreen(
-                                                        tagId: menShoeData[index].pId,
-                                                        image: menShoeData[index].image,
-                                                        title: menShoeData[index].pName,
-                                                      ))));
+                      builder: (context, item, child) {
+                    return TabBarView(controller: tabController,
+                        children: [
+                      Column(
+                        children: [
+                          Expanded(
+                            child: GridView.builder(
+                              itemBuilder: (cxt, int index) {
+                                return ItemCard(
+                                    productImage: 'assets/images/laptop.png',
+                                    product: item.electronics[index],
+                                    press: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductDetailScreen(
+                                                  product:
+                                                      item.electronics[index],
+                                                  productImage:
+                                                      'assets/images/laptop.png',
+                                                ))));
+                              },
+                              itemCount: item.electronics.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 0.75,
+                                     ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Expanded(
+                            child: GridView.builder(
+                              itemBuilder: (cxt, int index) {
+                                return ItemCard(
+                                    productImage: 'assets/images/jewelary.png',
+                                    product: item.jewelary[index],
+                                    press: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductDetailScreen(
+                                                  product: item.jewelary[index],
+                                                  productImage:
+                                                      'assets/images/jewelary.png',
+                                                ))));
+                              },
+                              itemCount: item.jewelary.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: .75,
+                                      mainAxisSpacing: 20,
+                                      crossAxisSpacing: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Expanded(
+                            child: GridView.builder(
+                              itemBuilder: (cxt, int index) {
+                                return ItemCard(
+                                    productImage: 'assets/images/shirt.png',
+                                    product: item.menCloth[index],
+                                    press: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductDetailScreen(
+                                                  product: item.menCloth[index],
+                                                  productImage:
+                                                      'assets/images/shirt.png',
+                                                ))));
+                              },
+                              itemCount: item.menCloth.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: .75,
+                                      mainAxisSpacing: 20,
+                                      crossAxisSpacing: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Expanded(
+                            child: GridView.builder(
+                              itemBuilder: (cxt, int index) {
+                                return ItemCard(
+                                    productImage:
+                                        'assets/images/women.png',
+                                    product: item.womenCloth[index],
+                                    press: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductDetailScreen(
+                                                  product:
+                                                      item.womenCloth[index],
+                                                  productImage:
+                                                      'assets/images/women-cloth.png',
+                                                ))));
+                              },
+                              itemCount: item.womenCloth.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: .75,
+                                      mainAxisSpacing: 20,
+                                      crossAxisSpacing: 20),
+                            ),
+                          ),
+                        ],
 
-                                },
-                                itemCount: item.productData.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2, childAspectRatio: .75,mainAxisSpacing: 20,crossAxisSpacing: 20),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.405,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (cxt, int index) {
-                                  womenShoeData = productData
-                                      .where((element) =>
-                                          element.pCategory == 'Women_Shoe')
-                                      .toList();
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProductDetailScreen(
-                                                    tagId: womenShoeData[index].pId,
-                                                    image:
-                                                        womenShoeData[index].image,
-                                                    title:
-                                                        womenShoeData[index].pName,
-                                                  )));
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(15),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(15),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                color: Colors.black38,
-                                                blurRadius: .3,
-                                                spreadRadius: 1)
-                                          ]),
-                                      margin: EdgeInsets.all(8),
-                                      height: MediaQuery.of(context).size.height *
-                                          0.405,
-                                      width:
-                                          MediaQuery.of(context).size.width * 0.6,
-                                      child: ProductCard(
-                                          menShoeData[index].pName,
-                                          menShoeData[index].pCategory,
-                                          menShoeData[index].pId,
-                                          menShoeData[index].image,
-                                          menShoeData[index].rate),
-                                    ),
-                                  );
-                                },
-                                itemCount: 6,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.409,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (cxt, int index) {
-                                  kidsShoeData = productData
-                                      .where((element) =>
-                                          element.pCategory == 'Kid_Shoe')
-                                      .toList();
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProductDetailScreen(
-                                                    tagId: kidsShoeData[index].pId,
-                                                    image:
-                                                        kidsShoeData[index].image,
-                                                    title:
-                                                        kidsShoeData[index].pName,
-                                                  )));
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(15),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(15),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                color: Colors.black38,
-                                                blurRadius: .3,
-                                                spreadRadius: 1)
-                                          ]),
-                                      margin: EdgeInsets.all(8),
-                                      height: MediaQuery.of(context).size.height *
-                                          0.405,
-                                      width:
-                                          MediaQuery.of(context).size.width * 0.6,
-                                      child: ProductCard(
-                                          menShoeData[index].pName,
-                                          menShoeData[index].pCategory,
-                                          menShoeData[index].pId,
-                                          menShoeData[index].image,
-                                          menShoeData[index].rate),
-                                    ),
-                                  );
-                                },
-                                itemCount: 6,
-                              ),
-                            ),
-                          ],
-                        )
-                      ]);
-                    }
-                  ),
+
+                      )
+                    ]);
+                  }),
                 ),
               ],
             ),

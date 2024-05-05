@@ -28,7 +28,7 @@ class BottomNavigatorWidget extends StatelessWidget {
                         ),
 
             ),
-            Expanded(child:Text(label,style: iconTitle(),) ,),],)
+            Expanded(child:Text(label,style: iconTitle,) ,),],)
 
         ));
   }

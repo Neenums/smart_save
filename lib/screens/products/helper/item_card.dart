@@ -1,107 +1,91 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smart_save/constants/app_colors.dart';
 import 'package:smart_save/constants/app_constant.dart';
+import 'package:smart_save/screens/products/helper/rating.dart';
 
 import '../../../model/product_model.dart';
 
-
-
 class ItemCard extends StatelessWidget {
-  const ItemCard({super.key, required this.product, required this.press});
+  const ItemCard({super.key,
+    required this.product,
+    required this.productImage,
+    required this.press});
 
   final ProductModel product;
+  final String productImage;
   final VoidCallback press;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: press,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              width: 200,
+      child: Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15)),
+        child: Container(
+          decoration:BoxDecoration(
+              color: Colors.white,borderRadius: BorderRadius.circular(15)),
+          child: Stack(
+            alignment: Alignment.bottomCenter,
 
-              padding: EdgeInsets.all(kDefaultPaddin),
-              decoration: BoxDecoration(
 
-border: Border(bottom: BorderSide(color: Colors.white)),
-                color: secondary,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12)),
+            children: <Widget>[
+              Align(alignment: Alignment.topCenter,
+                child: Stack(
+                    children: [
+                      Image.asset(
+                        productImage, fit: BoxFit.contain, height: 200,),
+                      Positioned(
+                          right: -10,
+
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.favorite_border_outlined),
+                          ))
+                    ]),
               ),
-              child: Hero(
-                tag: "${product.id}",
-                child: Stack(children: [
-                  Image.asset('assets/images/shirt.png'),
-                  Positioned(
-                      right: -10,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.favorite_border_outlined),
-                      ))
-                ]),
-              ),
-            ),
-          ),
-          Container(
-            width: 200,
-            decoration: BoxDecoration(
+              Container(padding: const EdgeInsets.all(3),
 
-              color: secondary,
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(12)),
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
-                  child: Text(
-
-                    product.title!,
-                    style: TextStyle(color: kTextLightColor),
-                  ),
+                decoration:  BoxDecoration(
+                  color: Colors.white,
+                  border: Border(top: BorderSide(color:Colors.grey.shade300)),
+                  borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12)),
                 ),
-                Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.star,
-                      color: Colors.deepOrange,
+                    Padding(
+                      padding:
+                      const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
+                      child: Text(
+
+
+                        product.title!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: kTextLightColor),
+                      ),
                     ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.deepOrange,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.deepOrange,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.deepOrange,
-                    ),
-                    Icon(
-                      Icons.star_border_outlined,
-                      color: Colors.deepOrange,
+                    const ProductRating(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "\$${product.price!}.00",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     )
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "\$${product.price!}",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

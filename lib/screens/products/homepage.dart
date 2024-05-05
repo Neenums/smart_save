@@ -7,11 +7,12 @@ import 'package:smart_save/screens/products/product_screen.dart';
 import 'package:smart_save/screens/profile/profile_page.dart';
 
 import '../cart/cart_page.dart';
+import '../wishlist/wishlist_page.dart';
 
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
 
-  List<Widget> pageList = [ProductScreen(), ProductScreen(),ProfilePage(),CartScreen()];
+  List<Widget> pageList = [ProductScreen(), WishlistPage(),ProfilePage(),CartScreen()];
 
   @override
   Widget build(BuildContext context) {

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_save/constants/app_colors.dart';
 
-class Rating extends StatelessWidget {
-  const Rating({super.key});
+class ProductRating extends StatelessWidget {
+  const ProductRating({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
           Icons.star,
@@ -53,7 +54,7 @@ class ForSize extends StatelessWidget {
         backgroundColor: !isSelected ? Colors.white70 : primary,
         child: Text(
           size,
-          style: TextStyle(
+          style: GoogleFonts.raleway(
               fontWeight: FontWeight.bold,
               color: !isSelected ? Colors.black45 : Colors.white),
         ),

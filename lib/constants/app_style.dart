@@ -14,14 +14,22 @@ TextStyle appStyleHt(double size,Color color,FontWeight fw,double ht) {
 }
 
   TextStyle appNameHead(){
-    return GoogleFonts.raleway(fontSize:22,color:primary,fontWeight:FontWeight.w900,);
+    return GoogleFonts.raleway(fontSize:35,color:primary,fontWeight:FontWeight.w900,);
   }
-TextStyle title(){
-  return GoogleFonts.raleway(fontSize:20,color:Colors.black,fontWeight:FontWeight.w500,);
-}
-TextStyle subhead(){
-  return GoogleFonts.raleway(fontSize:22,color:primary,fontWeight:FontWeight.w900,);
-}
-TextStyle iconTitle(){
-  return GoogleFonts.raleway(fontSize:14,color:Colors.grey[600],fontWeight:FontWeight.w500,);
-}
+TextStyle title=
+   GoogleFonts.raleway(fontSize:20,color:Colors.black,fontWeight:FontWeight.bold,);
+
+TextStyle subhead=GoogleFonts.raleway(fontSize:18,color:Colors.black,fontWeight:FontWeight.w500,);
+
+TextStyle iconTitle
+  = GoogleFonts.raleway(fontSize:14,color:Colors.grey[600],fontWeight:FontWeight.w500,);
+
+
+TextStyle defaultStyle =  GoogleFonts.raleway(color: Colors.grey, fontSize: 20.0);
+
+TextStyle linkStyle = GoogleFonts.raleway(color: Colors.blue);
+TextStyle buttonStyle = GoogleFonts.raleway(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+  fontSize: 16,
+);

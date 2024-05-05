@@ -1,74 +1,157 @@
-import 'package:flutter/gestures.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_save/constants/app_colors.dart';
 import 'package:smart_save/constants/app_strings.dart';
+import 'package:smart_save/constants/app_style.dart';
+import 'package:smart_save/provider/sign_up_provider.dart';
 import 'package:smart_save/screens/authentication/helper/button.dart';
 import 'package:smart_save/screens/authentication/helper/form_field.dart';
 import 'package:smart_save/screens/authentication/helper/squre_tile.dart';
-import 'package:smart_save/screens/products/homepage.dart';
-import 'package:smart_save/screens/products/product_screen.dart';
+import 'package:email_validator/email_validator.dart';
 
-class SignUp extends StatelessWidget {
+
+class SignUp extends StatefulWidget {
   SignUp({super.key});
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
-  TextStyle defaultStyle = TextStyle(color: Colors.grey, fontSize: 20.0);
-  TextStyle linkStyle = TextStyle(color: Colors.blue);
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController emailController ;
+
+  late TextEditingController passwordController ;
+
+  late TextEditingController confirmPasswordController ;
+
+  TextStyle defaultStyle = const TextStyle(color: Colors.grey, fontSize: 20.0);
+
+  TextStyle linkStyle = const TextStyle(color: Colors.blue);
+  @override
+  void initState() {
+    emailController=TextEditingController();
+    passwordController=TextEditingController();
+    confirmPasswordController=TextEditingController();
+    super.initState();
+  }
+@override
+  void dispose() {
+   emailController.dispose();
+   passwordController.dispose();
+   confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    final formFieldHeight = height * 0.10;
+    double width = MediaQuery.of(context).size.width;
+    final formFieldHeight = height * 0.04;
     final spaceH = height * 0.04;
-    return Scaffold(appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back,color: primary,), onPressed: () {  },),),
+    final kPadding=width*0.07;
+    return Scaffold(appBar: AppBar(leading: IconButton(icon: const
+    Icon(Icons.arrow_back,color: primary,),
+    onPressed: () {
+      Navigator.pop(context);
+    },),),
       body: SafeArea(
           child: SingleChildScrollView(
-            child: Form(
-                child: Column(
+            physics: NeverScrollableScrollPhysics(),
+            child: Consumer<SignUpProvider>(
+        builder: (context, registration, child) {
+      return Form(key: _formKey,
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: formFieldHeight,),
-                    Text(
-                      AppStrings.instance.appName,
-                      style: TextStyle(
-                          color: primary, fontSize: 45, fontWeight: FontWeight.bold),
+                    Align(alignment: Alignment.center,
+                      child: Text(
+                        AppStrings.instance.appName,
+                        style: const TextStyle(
+                            color: primary, fontSize: 45, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     SizedBox(height: spaceH,),
-                    Text(
-                      'Login to your account',
-                      style: TextStyle(
-                          color: heading, fontSize: 14, fontWeight: FontWeight.bold),
+                    Padding(padding: EdgeInsets.only(left:kPadding ),
+                      child:  Text(
+                        'Create your account',
+                        style:subhead
+                      ),
                     ),
 
-                    SizedBox(height: 25,),
-                    AppFormField(controller: emailController, hintText: 'Email', obscureText: false),
-                    SizedBox(height: 10,),
-                    AppFormField(controller: passwordController, hintText: 'Password', obscureText: true),
-                    SizedBox(height: 10,),
-                    AppFormField(controller: confirmPasswordController, hintText: 'Confirm Password', obscureText: true),
-                    SizedBox(height: 15,),
+                    const SizedBox(height: 25,),
+                    AppFormField(controller: emailController, hintText: 'Email', obscureText: false,
+                        validator: ( value){
+                      bool isValid=EmailValidator.validate(emailController.text);
+                      if(isValid==true){
+                        return null;
+                      }
+                      else if(value!.isEmpty){
+                        return 'Please enter email';
+                      }else{
+                        return 'Please enter valid email';
+                      }
+                        }),
+                    const SizedBox(height: 10,),
+                    AppFormField(controller: passwordController, hintText: 'Password', obscureText: true,
+                    validator: (pass){
+                      if(pass!.isNotEmpty){
+                        return null;
+                      }
+                      else{
+                        return 'Please enter password';
+                      }
+                    },),
+                    const SizedBox(height: 10,),
+                    AppFormField(controller: confirmPasswordController, hintText: 'Confirm Password', obscureText: true,
+                        validator: (confirmPass){
+                       var enteredPass=passwordController.text;
+                       var enteredConfirmPass=confirmPasswordController.text;
+                       if (confirmPass == null || confirmPass.isEmpty) {
+                         return 'Please enter confirm password';
+                       }
+                          else if(confirmPass!.isNotEmpty){
+                            return null;
+                          }
+                          else if(enteredPass!=enteredConfirmPass){
+                            return 'Passwords do not match..';
+                          }
+                        }),
+                    const SizedBox(height: 15,),
                     AppTextButton(onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (cntx)=>MainScreen()));
-                    }, buttonText: 'SignUp'),
+                      if(!_formKey.currentState!.validate()) {
+                        print('Invalid signup form');
+                      }else{
+                        registration.registration(
+                            emailController.text, passwordController.text);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Registration successfully completed.\n Please login to continue..')),
+                        );
+
+
+                      }
+                    }, buttonText: 'Sign Up'),
                     SizedBox(height: formFieldHeight),
-                    Text('- Or sign in with -'),
+                     Align(alignment: Alignment.center,
+                         child: Text('- Or sign in with -',style: subhead,)),
                     SizedBox(height: spaceH),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children:  [
                         SquareTile(imagePath: AppStrings.instance.google_logo),
-                        SizedBox(width: 10,),
+                        const SizedBox(width: 10,),
                         SquareTile(imagePath: AppStrings.instance.facebook_logo),
-                        SizedBox(width: 10,),
+                        const SizedBox(width: 10,),
                         SquareTile(imagePath:AppStrings.instance.twitter_logo )
                       ],
                     ),
                     SizedBox(height: formFieldHeight,),
 
                   ],
-                )),
+                ));}
           )),
-    );
+    ));
   }
 }
