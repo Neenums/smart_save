@@ -368,7 +368,7 @@ class _CartScreenState extends State<CartScreen> {
                                     cartProvider.fetchCart(context);
                                     box.clear();
                                     Navigator.pushReplacementNamed(navigatorKey.currentState!.context, 'mainscreen');
-                                    
+
                                   },
                                 ),
                               ],
