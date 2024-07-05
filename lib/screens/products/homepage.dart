@@ -51,7 +51,7 @@ class MainScreen extends StatelessWidget {
                   },
                   size: 42,
                   iconData: mainScreenNotifier.pageIndex == 1
-                      ? Icons.favorite_border_outlined
+                      ? Icons.favorite
                       : Icons.favorite_border_outlined,
                   color: mainScreenNotifier.pageIndex == 1
                       ? Colors.black

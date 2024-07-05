@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_save/constants/app_style.dart';
+import 'package:smart_save/provider/favorite_provider.dart';
 import '../../constants/app_colors.dart';
 import '../products/helper/rating.dart';
 
@@ -8,6 +9,7 @@ class WishlistPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final  favoriteProduct=FavoriteProvider.of(context);
     return Scaffold(
       backgroundColor: background,
       body: SafeArea(
@@ -32,7 +34,7 @@ class WishlistPage extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: 2,
+                itemCount: favoriteProduct.favorites.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Container(
@@ -53,7 +55,7 @@ class WishlistPage extends StatelessWidget {
                                   color: background,
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                child: Image.asset('assets/images/laptop.png'),
+                                child: Image.network(favoriteProduct.favorites[index].thumbnail!),
                               ),
                             ),
                           ),
@@ -69,7 +71,7 @@ class WishlistPage extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Hp Raizan',
+                                        favoriteProduct.favorites[index].title!,
                                         overflow: TextOverflow.ellipsis,
                                         style: subhead.copyWith(
                                             fontSize: 16,
@@ -77,17 +79,17 @@ class WishlistPage extends StatelessWidget {
                                         maxLines: 2,
                                       ),
                                       const SizedBox(height: 8),
-                                      const Row(
+                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          ProductRating(),
+                                          ProductRating(rating: favoriteProduct.favorites[index].rating!,),
                                         ],
                                       ),
                                       const SizedBox(height: 8),
                                       Text.rich(
                                         TextSpan(
-                                          text: "\$56.00",
+                                          text: "\$${favoriteProduct.favorites[index].price}",
                                           style: subhead.copyWith(
                                               fontWeight: FontWeight.w500,
                                               fontSize: 16),
@@ -98,13 +100,13 @@ class WishlistPage extends StatelessWidget {
                                       )
                                     ],
                                   ),
-                                  const Positioned(
+                                   Positioned(
                                       right: -10,
                                       top: -20,
                                       child: CircleAvatar(backgroundColor: background,
                                         radius: 30,
                                         child: Icon(
-                                          Icons.favorite,
+                                          favoriteProduct.isExist((favoriteProduct.favorites[index])) ?Icons.favorite:Icons.favorite_border_outlined,
                                           color: Colors.red,
                                         ),
                                       )),

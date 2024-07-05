@@ -104,7 +104,7 @@ crossAxisAlignment: CrossAxisAlignment.stretch,
               const SizedBox(height: 15,),
             AppTextButton(onTap: (){
               if (_loginFormKey.currentState!.validate()) {
-                signInData.login();
+                signInData.login(emailController.text,passwordController.text);
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Logined  successfully..')),

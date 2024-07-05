@@ -84,16 +84,8 @@ class _CartScreenState extends State<CartScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [ CircleAvatar(
-                      backgroundColor: primary,
-                      radius: 22,
-                      child: Center(
-                        child: IconButton(
-                            onPressed: () {}, icon: const Icon(
-                            Icons.arrow_back_ios_new_outlined,color: Colors.white,)),
-                      ),
-                    ),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
                       Stack(fit:StackFit.loose,
                               clipBehavior: Clip.none,
                       children: [
@@ -180,7 +172,7 @@ class _CartScreenState extends State<CartScreen> {
                                             color: background,
                                             borderRadius: BorderRadius.circular(15),
                                           ),
-                                          child: Image.asset(
+                                          child: Image.network(
                                               cartProvider.result[index]['image']),
                                         ),
                                       ),
@@ -201,9 +193,9 @@ class _CartScreenState extends State<CartScreen> {
                                                   maxLines: 2,
                                                 ),
                                                 const SizedBox(height: 8),
-                                                const Row(mainAxisAlignment: MainAxisAlignment.start,
+                                                 Row(mainAxisAlignment: MainAxisAlignment.start,
                                                   children: [
-                                                     ProductRating(),
+                                                     ProductRating(rating:3 ,),
                                                   ],
                                                 ),
                                                 const SizedBox(height: 8),
@@ -253,7 +245,7 @@ class _CartScreenState extends State<CartScreen> {
                                                               "qty": val,
                                                             });
                                                             await cartProvider.fetchCart(context);
-                                                        
+
                                                             double Subtotal = 0;
                                                             for (int i = 0;
                                                             i < cartProvider.result.length;
@@ -271,10 +263,10 @@ class _CartScreenState extends State<CartScreen> {
                                                           },
                                                           qtyFormProps: const QtyFormProps(
                                                               enableTyping: false),
-                                                        
+
                                                           decoration:
                                                           const QtyDecorationProps(
-                                                        
+
                                                             isBordered: false,
                                                             minusBtn: Icon(
                                                               Icons.remove,

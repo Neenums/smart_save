@@ -6,16 +6,19 @@ import '../../../constants/app_style.dart';
 class AppTextButton extends StatelessWidget {
   final Function()? onTap;
   final String buttonText;
+  bool isPadding;
+  bool isMargining;
+  bool custom;
 
-   const AppTextButton({super.key, required this.onTap,required this.buttonText});
+    AppTextButton({super.key, required this.onTap,required this.buttonText,this.isPadding=true,this.isMargining=true,this.custom=false});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(25),
-        margin: const EdgeInsets.symmetric(horizontal: 25),
+        padding:isPadding?  EdgeInsets.all(25):EdgeInsets.all(12),
+        margin:  EdgeInsets.symmetric(horizontal: 25),
         decoration: BoxDecoration(
           color:primary ,
           borderRadius: BorderRadius.circular(8),
@@ -24,7 +27,7 @@ class AppTextButton extends StatelessWidget {
             Center(
               child: Text(
                 buttonText,
-                style: buttonStyle,
+                style:custom?const TextStyle(fontSize: 16,color: Colors.white): buttonStyle,
               ),
             ),
 
@@ -43,9 +46,9 @@ class AppButtonWithIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(25),
-        margin: const EdgeInsets.symmetric(horizontal: 25),
+      child: Container(height: 50,
+        // padding: const EdgeInsets.all(25),
+        // margin: const EdgeInsets.symmetric(horizontal: 25),
         decoration: BoxDecoration(
           color:primary ,
           borderRadius: BorderRadius.circular(8),

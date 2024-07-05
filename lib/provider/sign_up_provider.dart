@@ -7,8 +7,9 @@ import 'package:smart_save/services/api_services.dart';
 class SignUpProvider extends ChangeNotifier{
   bool isSignUpSuccess=false;
 
-  void registration(String email,String password){
-    ApiServices().registration(email, password,onSuccess: (isSuccess){
+  void registration(String name,String email,String password){
+    ApiServices().registration(name,email, password,
+        onSuccess: (isSuccess){
       isSignUpSuccess=isSuccess;
 
       notifyListeners();
@@ -20,6 +21,7 @@ class SignUpProvider extends ChangeNotifier{
     },onFailure: (message){
       ScaffoldMessenger.of(navigatorKey.currentState!.context).showSnackBar(SnackBar(content: Text("$message")));
       notifyListeners();
-    });
+    }
+    );
   }
 }

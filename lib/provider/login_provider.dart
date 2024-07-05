@@ -7,8 +7,8 @@ import 'package:smart_save/services/api_services.dart';
 class LoginProvider extends ChangeNotifier{
   bool isLoginSuccess=false;
 
-  void login(){
-    ApiServices().login("email", "password",onSuccess: (isSuccess){
+  void login(String email,String password){
+    ApiServices().login(email, password,onSuccess: (isSuccess){
       isLoginSuccess=isSuccess;
 
       notifyListeners();
@@ -22,4 +22,6 @@ class LoginProvider extends ChangeNotifier{
       notifyListeners();
     });
   }
+
+
 }

@@ -1,36 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_save/constants/app_colors.dart';
 
 class ProductRating extends StatelessWidget {
-  const ProductRating({super.key});
+  num? rating;
+   ProductRating( {super.key,required this.rating
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.star,
-          color: Colors.deepOrange,
-        ),
-        Icon(
-          Icons.star,
-          color: Colors.deepOrange,
-        ),
-        Icon(
-          Icons.star,
-          color: Colors.deepOrange,
-        ),
-        Icon(
-          Icons.star,
-          color: Colors.deepOrange,
-        ),
-        Icon(
-          Icons.star_border_outlined,
-          color: Colors.deepOrange,
-        )
-      ],
+    return  RatingBarIndicator(
+      rating: double.parse((rating).toString()),
+
+      itemBuilder: (context, index) =>
+      const Icon(
+        Icons.star,
+        color: primary,
+      ),
+      itemCount: 5,
+      itemSize: 20.0,
+      unratedColor: Colors.grey.withAlpha(50),
+      direction: Axis.horizontal,
     );
   }
 }

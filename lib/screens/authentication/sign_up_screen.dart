@@ -22,6 +22,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController emailController ;
+  late TextEditingController nameController ;
 
   late TextEditingController passwordController ;
 
@@ -32,6 +33,7 @@ class _SignUpState extends State<SignUp> {
   TextStyle linkStyle = const TextStyle(color: Colors.blue);
   @override
   void initState() {
+    nameController=TextEditingController();
     emailController=TextEditingController();
     passwordController=TextEditingController();
     confirmPasswordController=TextEditingController();
@@ -39,6 +41,7 @@ class _SignUpState extends State<SignUp> {
   }
 @override
   void dispose() {
+  nameController.dispose();
    emailController.dispose();
    passwordController.dispose();
    confirmPasswordController.dispose();
@@ -82,6 +85,17 @@ class _SignUpState extends State<SignUp> {
                     ),
 
                     const SizedBox(height: 25,),
+                    AppFormField(controller: nameController, hintText: 'Name', obscureText: false,
+                        validator: ( value){
+
+                          if(value!.isNotEmpty){
+                            return null;
+                          }
+                         else{
+                            return 'Please enter name';
+                          }
+                        }),
+                    const SizedBox(height: 10,),
                     AppFormField(controller: emailController, hintText: 'Email', obscureText: false,
                         validator: ( value){
                       bool isValid=EmailValidator.validate(emailController.text);
@@ -124,7 +138,7 @@ class _SignUpState extends State<SignUp> {
                       if(!_formKey.currentState!.validate()) {
                         print('Invalid signup form');
                       }else{
-                        registration.registration(
+                        registration.registration(nameController.text,
                             emailController.text, passwordController.text);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Registration successfully completed.\n Please login to continue..')),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:smart_save/constants/app_colors.dart';
 import 'package:smart_save/constants/app_constant.dart';
+import 'package:smart_save/provider/favorite_provider.dart';
 import 'package:smart_save/screens/products/helper/rating.dart';
 
 import '../../../model/product_model.dart';
@@ -11,14 +12,21 @@ class ItemCard extends StatelessWidget {
   const ItemCard({super.key,
     required this.product,
     required this.productImage,
-    required this.press});
+    required this.press,
+     required this.favoritePress,
+
+  });
 
   final ProductModel product;
   final String productImage;
   final VoidCallback press;
+  final  void Function() favoritePress;
+
+
 
   @override
   Widget build(BuildContext context) {
+    final provider=FavoriteProvider.of(context);
     return GestureDetector(
       onTap: press,
       child: Card(
@@ -35,14 +43,18 @@ class ItemCard extends StatelessWidget {
               Align(alignment: Alignment.topCenter,
                 child: Stack(
                     children: [
-                      Image.asset(
-                        productImage, fit: BoxFit.contain, height: 200,),
+                      // Image.asset(
+                      //   productImage, fit: BoxFit.contain, height: 200,),
+                      Image.network(product.thumbnail!),
                       Positioned(
                           right: -10,
 
                           child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.favorite_border_outlined),
+                            onPressed: () {
+                             provider.toggleFavorite(product);
+
+                            },
+                            icon:provider.isExist(product) ?Icon(Icons.favorite,color: Colors.red,):Icon(Icons.favorite_border_outlined),
                           ))
                     ]),
               ),
@@ -72,7 +84,7 @@ class ItemCard extends StatelessWidget {
                         style: const TextStyle(color: kTextLightColor),
                       ),
                     ),
-                    const ProductRating(),
+                     ProductRating(rating:product!.rating),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
